@@ -90,13 +90,102 @@ The database contains 2.3 million geo-referenced wildfire records compiled from 
 
 **Rationale:**
 
+**Column selection:** The 15 columns retained were chosen to cover the four dimensions most relevant to the prediction task — ignition (cause classification, general cause), temporal context (fire year, discovery date, discovery day of year), outcome (fire size, size class, containment date, containment day of year), and spatial context (latitude, longitude, state, county, owner). Columns excluded include identifiers with no predictive value (FPA_ID, LOCAL_FIRE_REPORT_ID), join keys for external tables not used in this project (ICS_209_PLUS_INCIDENT_JOIN_ID, MTBS_ID), and fields with extremely high missingness that would introduce more noise than signal (DISCOVERY_TIME, CONT_TIME, FIRE_CODE). This is a judgment call: retaining more columns increases information but also increases sparsity and storage cost.
+
+**Document structure:** Each fire incident is stored as a self-contained nested document with six sub-objects: `cause`, `discovery`, `containment`, `size`, and `location`. This structure was chosen because it mirrors the natural conceptual groupings of the data, makes queries against logical groups (e.g., all location fields) more readable, and satisfies the document model requirement of the assignment without artificially inflating nesting depth. Flat insertion of all 15 fields as top-level keys was rejected because it provides no structural benefit and makes the implicit schema harder to communicate.
+
+**Record count:** The full 2.3 million record dataset exceeds the 512 MB free tier storage limit of MongoDB Atlas. Rather than upgrading to a paid tier or aggressively dropping additional columns, 300000 records were inserted — well above the 1,000-record threshold for full rubric credit. This is a deliberate trade-off that accepts reduced scale in exchange for a zero-cost deployment.
+
+**Date handling:** `DISCOVERY_DATE` and `CONT_DATE` were cast to strings prior to insertion. The raw values from the GeoPackage are Julian date floats, which are not human-readable and do not serialize cleanly to BSON. Casting to string preserves the value without loss and avoids timezone conversion issues that arise when using Python datetime objects with PyMongo.
+
+**County field:** The `COUNTY` field in the raw data stores FIPS numeric codes rather than county names. This is noted as a known limitation. FIPS codes are retained as-is because joining to a FIPS lookup table was judged out of scope for this deliverable, but this introduces interpretability risk for any model or visualization that treats county as a categorical label.
+
 **Bias Identification:**
+
+Several sources of bias are present in this dataset. Reporting bias is the most significant: smaller fires in rural or less-resourced jurisdictions are systematically underreported compared to fires on federal land, which has more robust incident tracking infrastructure. Temporal bias exists because reporting standards, cause classification codes, and data collection practices changed materially over the 29-year span, meaning fires from the early 1990s are not directly comparable to those from 2020. Geographic bias is introduced because the western United States, particularly California, Oregon, and Idaho, contributes disproportionately to the record count, both because those states have more fires and because their agencies have more mature reporting systems. Finally, cause classification bias exists because a significant portion of records carry unknown or unspecified causes, which could skew any model trained to predict cause category.
 
 **Bias Mitigation:**
 
+Reporting and geographic bias can be partially mitigated by including `STATE` and `OWNER_DESCR` as features in the model, allowing it to learn jurisdiction-specific patterns rather than treating all records as drawn from the same population. Temporal bias can be addressed by including `FIRE_YEAR` as a feature and, where appropriate, stratifying train/test splits by year rather than sampling randomly. For cause classification bias, records with null or unknown cause values can be excluded from the cause-prediction task specifically, or treated as a separate class, so that missingness does not propagate as a spurious signal. Uncertainty quantification in the data dictionary further documents where numerical features carry high measurement error so that downstream analysis can weight or discount those fields accordingly.
 
+---
 
+## Metadata
 
+**Implicit Schema:**
+Every document in the `ds4320.hw10` collection conforms to the following structure. All top-level fields are required. Within sub-objects, fields may be null where the source data did not record a value (most commonly `containment.date` and `containment.day_of_year` for fires with no recorded containment).
 
+```json
+{
+  "fod_id":     <integer>,         // Unique record identifier — never null
+  "fire_year":  <integer>,         // Calendar year of discovery — never null
 
+  "cause": {
+    "classification": <string>,    // Broad NWCG cause class — may be null
+    "general_cause":  <string>     // Specific NWCG cause — may be null
+  },
 
+  "discovery": {
+    "date":        <string>,       // Discovery date as string (from Julian float) — never null
+    "day_of_year": <integer>       // Day of year (1–366) — never null
+  },
+
+  "containment": {
+    "date":        <string>,       // Containment date as string — may be null
+    "day_of_year": <float>         // Day of year — may be null
+  },
+
+  "size": {
+    "acres":      <float>,         // Estimated acres burned — never null
+    "size_class": <string>         // USFS size class A–G — never null
+  },
+
+  "location": {
+    "latitude":  <float>,          // NAD83 decimal degrees — never null
+    "longitude": <float>,          // NAD83 decimal degrees — never null
+    "state":     <string>,         // Two-letter state code — never null
+    "county":    <string>,         // FIPS county code (numeric string) — may be null
+    "owner":     <string>          // Primary land owner description — may be null
+  }
+}
+```
+
+**Conventions:**
+- String dates are sourced directly from the GeoPackage and are not guaranteed to follow a consistent format across all records.
+- `county` stores FIPS codes, not county names.
+- No additional top-level fields should be added without updating this schema document.
+
+**Data Summary:**
+| Table | Description | Link |
+|---|---|---|
+| `Fires` (FPA_FOD_20221014.gpkg) | Primary incident-level wildfire records, 2.3M rows, sourced from the USDA Forest Service Research Data Archive (6th Edition, 2022). Contains geographic, temporal, cause, and size attributes for each fire. | [https://www.fs.usda.gov/rds/archive/catalog/RDS-2013-0009.6](https://www.fs.usda.gov/rds/archive/catalog/RDS-2013-0009.6) |
+| `_variable_descriptions.csv` | Metadata table describing every field in the Fires layer and the supplementary NWCG unit table. One row per variable. | [Link to metadata](#scrollTo=zIPBZJvq7Mzb&line=3&uniqifier=1) |
+
+**Data Dictionary:**
+| Field (MongoDB path) | Data Type | Description | Example |
+|---|---|---|---|
+| `fod_id` | Integer | Unique numeric record identifier assigned by the FPA system | `1` |
+| `fire_year` | Integer | Calendar year in which the fire was discovered or confirmed | `2005` |
+| `cause.classification` | String | Broad NWCG classification of ignition cause | `"Human"` |
+| `cause.general_cause` | String | Specific NWCG general cause category | `"Power generation/transmission/distribution"` |
+| `discovery.date` | String | Date the fire was discovered or confirmed, cast from Julian float | `"2/2/2005"` |
+| `discovery.day_of_year` | Integer | Day of year (1–366) on which the fire was discovered | `33` |
+| `containment.date` | String | Date the fire was declared contained; null if not recorded | `"2/2/2005"` |
+| `containment.day_of_year` | Float | Day of year on which containment was declared; null if not recorded | `33.0` |
+| `size.acres` | Float | Estimated acres within the final fire perimeter | `0.1` |
+| `size.size_class` | String | USFS size class code: A (<0.25 ac), B (0.26–9.9), C (10–99.9), D (100–299), E (300–999), F (1000–4999), G (5000+) | `"A"` |
+| `location.latitude` | Float | NAD83 decimal degree latitude of the fire point of origin | `40.037` |
+| `location.longitude` | Float | NAD83 decimal degree longitude of the fire point of origin | `-121.006` |
+| `location.state` | String | Two-letter USPS state code for the state in which the fire burned | `"CA"` |
+| `location.county` | String | FIPS numeric county code for the county in which the fire burned | `"63"` |
+| `location.owner` | String | Name of the primary land owner or managing entity | `"USFS"` |
+
+**Data Dict Quantificaiton:**
+| Field | Range in Dataset | Source of Uncertainty | Quantification |
+|---|---|---|---|
+| `size.acres` | 0.0 – 662,702 | Fire perimeter estimates are manually mapped; smaller fires have lower mapping precision. Fires under 1 acre may have size recorded as nominal (e.g., exactly 0.1). | High uncertainty for Class A fires (<0.25 ac); low-to-moderate for Class D+ where perimeter mapping is more rigorous. Treat sub-1-acre values as approximate. |
+| `location.latitude` | 17.9 – 71.3 | Point location is precise to the centroid of the PLSS section (approximately 1 square mile), not the actual ignition point. | Positional uncertainty of up to ~0.7 miles radially for all records. |
+| `location.longitude` | -178.3 – -65.3 | Same PLSS centroid limitation as latitude. | Same ~0.7 mile radial uncertainty as latitude. |
+| `discovery.day_of_year` | 1 – 366 | Derived from discovery date; uncertainty depends on date recording accuracy at the originating agency. Smaller agencies may record date as the report date rather than actual discovery date. | Low uncertainty for federal records; moderate uncertainty for local/state agency records where reporting lag is common. |
+| `containment.day_of_year` | 1 – 366 (nullable) | Same agency-reporting uncertainty as discovery DOY; additionally, approximately 15–20% of records have null containment dates, introducing missingness that is not random (smaller fires and older records are more likely to be missing). | Null rate is a structural uncertainty. Present in analysis as a binary missingness indicator where relevant. |
+| `fire_year` | 1992 – 2020 | Reporting completeness and cause classification standards changed over this period; earlier years are less complete. | Treat pre300000 records with higher skepticism for cause and size fields. Include `fire_year` as a covariate to allow the model to account for temporal drift. |
