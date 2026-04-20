@@ -62,15 +62,15 @@ The general problem of predicting wildfire risk is broad enough to encompass eve
 This project lives at the intersection of environmental data science, natural resource management, and public safety. Wildfire management in the US is coordinated across a complex web of federal, state, and local agencies, including the USDA Forest Service, Bureau of Land Management, and state fire departments, each maintaining their own incident records that feed into national databases like the one used here. The core analytical challenge is that wildfire behavior is driven by a highly nonlinear combination of fuel load, weather, terrain, and ignition source, making prediction difficult but not intractable when sufficient historical data is available. Analysts in this domain work closely with GIS tools, satellite remote sensing, and increasingly machine learning to move from reactive suppression toward proactive risk modeling. The document model is particularly well-suited here because wildfire records are naturally entity-centric — each incident is a self-contained event with its own attributes, and the data is semi-structured, with varying completeness across fields depending on jurisdiction and fire size.
 
 > [!TIP]
-> Background reading materials are available in the [Background Reading Folder](XXXX)
+> Background reading materials are available in the [Background Reading Folder](https://1drv.ms/f/c/9e42f755abca0340/IgAh0G0FX_4ISIzBAolqJb_oATZCmaogTj36Xhq7btXstMk?e=pB9Wp0)
 
 | # | Title | Description | Link |
 |---|---|---|---|
-| 1 | *Spatial Database of Wildfires in the US 1992–2020* | The methodology paper behind your actual dataset — essential provenance reading | [Link](https://www.fs.usda.gov/rds/archive/Catalog/RDS-2013-0009.6) |
-| 2 | *Climate Warming Increases Extreme Daily Wildfire Growth Risk in California* (Nature, 2023) | Peer-reviewed study linking climate trends to fire behavior — gives scientific backbone | [Link](https://www.nature.com/articles/s41586-023-06444-3) |
-| 3 | *Wildfire Risk to Communities* (USFS/wildfirerisk.org) | The federal framework for community-level risk scoring — key for framing your KPIs | [Link](https://wildfirerisk.org) |
-| 4 | *The Rising Cost of Wildfire Operations* (USFS Policy Report) | Explains the suppression cost crisis and why prediction matters financially | [Link](https://www.fs.usda.gov/sites/default/files/2015-Rising-Cost-Wildfire-Operations.pdf) |
-| 5 | *Improving Wildfire Occurrence Modelling by Integrating Weather and Fuel Moisture* (ScienceDirect, 2023) | Academic ML approach to wildfire prediction — directly relevant to your methodology | [Link](https://www.sciencedirect.com/science/article/abs/pii/S1364815223002268) |
+| 1 | *Spatial Database of Wildfires in the US 1992–2020* | The methodology paper behind your actual dataset — essential provenance reading | [Link](https://1drv.ms/b/c/9e42f755abca0340/IQDbE0Ndmkc8Ro0sAsCT2hh2AQO8ujHilsZkHd5DJgk9jDc?e=kTf8pM) |
+| 2 | *Climate Warming Increases Extreme Daily Wildfire Growth Risk in California* (Nature, 2023) | Peer-reviewed study linking climate trends to fire behavior — gives scientific backbone | [Link](https://1drv.ms/b/c/9e42f755abca0340/IQAY8rkr7oNdR7Cc-1X8UrEFAYGjRp1hHuaD00m0BvdApk0?e=UGVBvS) |
+| 3 | *Wildfire Risk to Communities* (USFS/wildfirerisk.org) | The federal framework for community-level risk scoring — key for framing KPIs | [Link](https://1drv.ms/b/c/9e42f755abca0340/IQCL8J3x4jjcTI3Pb046LqH3ARDcd889cmQRjVX_c2Sw2cI?e=Up2GOy) |
+| 4 | *The Rising Cost of Wildfire Operations* (USFS Policy Report) | Explains the suppression cost crisis and why prediction matters financially | [Link](https://1drv.ms/b/c/9e42f755abca0340/IQA0dh7ThlQuTI4VMfvDMtpZAVO4grxpWonZaMKdtSj2pvw?e=GyOe7v) |
+| 5 | *Modeling initial attack success of wildfire suppression in Catalonia, Spain* (ScienceDirect, 2023) | Academic ML approach to wildfire prediction — directly relevant to methodology | [Link](https://1drv.ms/b/c/9e42f755abca0340/IQDfcB7ty4uWQp8gnrJDt5DVAROmWCOzMgPbRY-3Pe_6ySg?e=OM9FsH) |
 
 
 
