@@ -10,9 +10,9 @@
 | Name | Thomas Cusick |
 | NetID | tpg6hu |
 | DOI | [https://doi.org/10.5281/zenodo.19667633](https://doi.org/10.5281/zenodo.19667633) |
-| Press Release | [XXXXXXX](XXXX) |
+| Press Release | [XXXXXXX](Press_Release.md) |
 | Pipeline | [XXX](XXX) |
-| License | [MIT](LICENSE) |
+| License | [MIT](License.md) |
 
 ---
 
