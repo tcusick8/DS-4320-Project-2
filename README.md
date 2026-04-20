@@ -72,7 +72,27 @@ This project lives at the intersection of environmental data science, natural re
 | 4 | *The Rising Cost of Wildfire Operations* (USFS Policy Report) | Explains the suppression cost crisis and why prediction matters financially | [Link](https://1drv.ms/b/c/9e42f755abca0340/IQA0dh7ThlQuTI4VMfvDMtpZAVO4grxpWonZaMKdtSj2pvw?e=GyOe7v) |
 | 5 | *Modeling initial attack success of wildfire suppression in Catalonia, Spain* (ScienceDirect, 2023) | Academic ML approach to wildfire prediction — directly relevant to methodology | [Link](https://1drv.ms/b/c/9e42f755abca0340/IQDfcB7ty4uWQp8gnrJDt5DVAROmWCOzMgPbRY-3Pe_6ySg?e=OM9FsH) |
 
+---
 
+## Data Creation
+
+**Raw Data Acquisition:**
+
+The dataset used in this project is the Spatial Wildfire Occurrence Data for the United States, 1992–2020 (FPA_FOD_20221014, 6th Edition), published by Karen C. Short through the USDA Forest Service Research Data Archive in 2022. It is publicly available at no cost and was accessed directly via the [Forest Service Research Data Archive](https://www.fs.usda.gov/rds/archive/catalog/RDS-2013-0009.6). The data was downloaded as a GeoPackage (.gpkg) file and loaded into a Google Colab environment using GeoPandas, targeting the Fires layer which contains the full incident-level records.
+
+The database contains 2.3 million geo-referenced wildfire records compiled from the reporting systems of federal, state, and local fire organizations across all 50 states. Records were required to include a discovery date, final fire size, and a point location precise to at least a one-square-mile PLSS section in order to be included. The data was standardized to conform to National Wildfire Coordinating Group (NWCG) conventions, including an updated cause classification standard approved in August 2020, and underwent basic error-checking and deduplication prior to publication. In total, the dataset spans 29 years and represents approximately 180 million acres burned.
+
+**Code:**
+
+| File | Description | Link |
+|---|---|---|
+| `data_creation cell` | Downloads the raw FPA-FOD GeoPackage, loads the Fires layer, selects and slims columns, shapes each row into a nested MongoDB document, and inserts 300,000 records into MongoDB Atlas | [Data Creation Code](data_creation.ipynb) |
+
+**Rationale:**
+
+**Bias Identification:**
+
+**Bias Mitigation:**
 
 
 
