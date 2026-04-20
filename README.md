@@ -3,7 +3,7 @@
 > [!NOTE]
 > EXECUTIVE SUMMARY
 
---
+---
 
 | Spec | Value |
 |---|---|
