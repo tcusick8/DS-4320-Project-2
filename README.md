@@ -12,7 +12,7 @@
 | DOI | [https://doi.org/10.5281/zenodo.19667633](https://doi.org/10.5281/zenodo.19667633) |
 | Press Release | [XXXXXXX](XXXX) |
 | Pipeline | [XXX](XXX) |
-| License | [MIT](License) |
+| License | [MIT](LICENSE) |
 
 ---
 
