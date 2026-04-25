@@ -86,7 +86,7 @@ The database contains 2.3 million geo-referenced wildfire records compiled from 
 
 | File | Description | Link |
 |---|---|---|
-| `data_creation.ipynb` | Cells 4-9 downloads the raw FPA-FOD GeoPackage, loads the Fires layer, selects and slims columns, shapes each row into a nested MongoDB document, and inserts 2000 records into MongoDB Atlas | [Data Creation Code]([data_creation.ipynb](https://github.com/tcusick8/DS-4320-Project-2/blob/main/Pipeline/File%201%3A%20Fire_Pipeline.ipynb)) |
+| `File 1: Fire_Pipeline.ipynb` | Cells 4-9 downloads the raw FPA-FOD GeoPackage, loads the Fires layer, selects and slims columns, shapes each row into a nested MongoDB document, and inserts 2000 records into MongoDB Atlas | [Data Creation Code](https://github.com/tcusick8/DS-4320-Project-2/blob/main/Pipeline/File%201%3A%20Fire_Pipeline.ipynb) |
 
 **Rationale:**
 
