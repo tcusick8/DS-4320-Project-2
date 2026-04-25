@@ -1,7 +1,8 @@
 # DS-4320-Project-2: Humans Dont Learn 30 Years of Wildfire Data Reveals Preventable Crisis
 
 > [!NOTE]
-> EXECUTIVE SUMMARY
+> EXECUTIVE SUMMARY:
+> 
 > This repository contains a full machine learning pipeline for predicting wildfire size class at the moment of discovery, built on 30 years of federal fire records (1992–2020) from the USDA Fire Program Analysis Fire Occurrence Database. Raw incident data was ingested into MongoDB Atlas as nested documents, queried into a pandas DataFrame, and fed into a Random Forest Classifier that predicts how large a fire is likely to grow — Class A (under 0.25 acres) through Class G (over 5,000 acres) — using only information available at the time of first report: location, date, cause, and land ownership. The pipeline achieves 65.75% accuracy on a held-out test set and surfaces discovery day-of-year and geographic coordinates as the strongest predictors of fire scale. All materials, including the annotated Jupyter notebook, press release, metadata schema, and domain background readings, are organized and linked below.
 
 ---
