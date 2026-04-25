@@ -1,0 +1,53 @@
+2026-04-25 17:36:37,775 [INFO] Logging initialized — writing to pipeline.log
+2026-04-25 17:36:37,777 [INFO] Libraries loaded and configuration set.
+2026-04-25 17:36:37,789 [INFO] Downloading USFS Fire Occurrence Database...
+2026-04-25 17:36:43,073 [INFO] Download complete.
+2026-04-25 17:36:43,077 [INFO] Extracting archive to Data/...
+2026-04-25 17:37:08,499 [INFO] Extraction complete. File available at Data/Data/FPA_FOD_20221014.gpkg
+2026-04-25 17:37:08,530 [INFO] Loading Fires layer from /content/Data/Data/FPA_FOD_20221014.gpkg...
+2026-04-25 17:39:20,804 [INFO] Loaded 2,303,566 fire records with 38 columns.
+2026-04-25 17:39:20,816 [INFO] Slimming dataset to selected columns...
+2026-04-25 17:39:23,384 [INFO] Slim shape: (2303566, 15)
+2026-04-25 17:39:29,797 [INFO] Estimated in-memory size: 1143.3 MB
+2026-04-25 17:39:29,813 [INFO] Shaping DataFrame rows into MongoDB documents...
+2026-04-25 17:41:14,137 [INFO] Shaped 2,303,566 documents successfully.
+2026-04-25 17:41:14,138 [INFO] Sample document: {'fod_id': 1, 'fire_year': 2005, 'cause': {'classification': 'Human', 'general_cause': 'Power generation/transmission/distribution'}, 'discovery': {'date': '2/2/2005', 'day_of_year': 33}, 'containment': {'date': '2/2/2005', 'day_of_year': 33.0}, 'size': {'acres': 0.1, 'size_class': 'A'}, 'location': {'latitude': 40.03694444, 'longitude': -121.00583333, 'state': 'CA', 'county': '63', 'owner': 'USFS'}}
+2026-04-25 17:41:15,766 [INFO] Successfully connected to MongoDB Atlas.
+2026-04-25 17:41:15,767 [INFO] Database: ds4320 | Collection: hw10
+2026-04-25 17:41:15,783 [INFO] Dropping existing collection to ensure clean insert...
+2026-04-25 17:41:15,852 [INFO] Collection cleared and ready.
+2026-04-25 17:41:15,917 [INFO] Storage before insert: 77.3 MB / 512 MB
+2026-04-25 17:41:15,918 [INFO] Inserting 2,000 documents into Atlas...
+2026-04-25 17:41:20,549 [INFO] Insert complete. Records in collection: 2,000
+2026-04-25 17:41:20,551 [INFO] Storage after insert: 77.3 MB / 512 MB
+2026-04-25 17:41:20,565 [INFO] Running aggregation pipeline to pull data from Atlas...
+2026-04-25 17:41:20,987 [INFO] Records loaded: 2,000
+2026-04-25 17:41:20,989 [INFO] Columns: ['fod_id', 'fire_year', 'cause_class', 'general_cause', 'discovery_doy', 'discovery_date', 'cont_date', 'cont_doy', 'size_acres', 'size_class', 'latitude', 'longitude', 'state', 'county', 'owner']
+2026-04-25 17:41:21,055 [INFO] MongoDB connection closed.
+2026-04-25 17:41:21,135 [INFO] Starting feature preparation...
+2026-04-25 17:41:21,140 [INFO] Dropped columns: ['size_acres', 'county']
+2026-04-25 17:41:21,146 [INFO] Rows after dropping null targets: 2,000
+2026-04-25 17:41:21,149 [INFO] Feature matrix shape: (2000, 12)
+2026-04-25 17:41:21,153 [INFO] Target distribution:
+size_class
+A    1306
+B     529
+C     113
+D      22
+E      17
+F       8
+G       5
+Name: count, dtype: int64
+2026-04-25 17:41:21,167 [INFO] Building preprocessing and model pipeline...
+2026-04-25 17:41:21,173 [INFO] Categorical columns: ['cause_class', 'general_cause', 'discovery_date', 'cont_date', 'state', 'owner']
+2026-04-25 17:41:21,175 [INFO] Numeric columns: ['fod_id', 'fire_year', 'discovery_doy', 'cont_doy', 'latitude', 'longitude']
+2026-04-25 17:41:21,177 [INFO] Pipeline built successfully.
+2026-04-25 17:41:21,189 [INFO] Splitting data into train/test sets...
+2026-04-25 17:41:21,200 [INFO] Train size: 1,600 | Test size: 400
+2026-04-25 17:41:21,202 [INFO] Fitting pipeline...
+2026-04-25 17:41:21,971 [INFO] Model training complete.
+2026-04-25 17:41:21,984 [INFO] Evaluating model on test set...
+2026-04-25 17:41:22,046 [INFO] Test accuracy: 0.6575
+2026-04-25 17:41:22,669 [INFO] Confusion matrix saved to confusion_matrix.png
+2026-04-25 17:41:22,685 [INFO] Extracting feature importances...
+2026-04-25 17:41:23,313 [INFO] Feature importance plot saved to feature_importance.png
