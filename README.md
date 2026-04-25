@@ -180,7 +180,7 @@ Every document in the `ds4320.hw10` collection conforms to the following structu
 | `location.county` | String | FIPS numeric county code for the county in which the fire burned | `"63"` |
 | `location.owner` | String | Name of the primary land owner or managing entity | `"USFS"` |
 
-**Data Dict Quantification:**
+**Data Dictionary Quantification:**
 | Field | Range in Dataset | Source of Uncertainty | Quantification |
 |---|---|---|---|
 | `size.acres` | 0.0 – 662,702 | Fire perimeter estimates are manually mapped; smaller fires have lower mapping precision. Fires under 1 acre may have size recorded as nominal (e.g., exactly 0.1). | High uncertainty for Class A fires (<0.25 ac); low-to-moderate for Class D+ where perimeter mapping is more rigorous. Treat sub-1-acre values as approximate. |
