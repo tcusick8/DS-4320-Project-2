@@ -26,13 +26,13 @@ The model is trained on 80% of available records and tested on the remaining 20%
 
 ## What the Data Shows
 
-![Confusion Matrix](../Pipeline/confusion_matrix.png)
+[Confusion Matrix](/Pipeline/confusion_matrix.png)
 
 The confusion matrix above shows model predictions against actual fire size classes on 400 held-out test incidents. The model achieves **65.75% overall accuracy**, with strongest performance on Class A fires — correctly identifying 89% of small fires that do not warrant heavy resource commitment. This is the right place to perform well: false alarms on Class A fires waste resources, and missing them is rare.
 
 Performance degrades on Class D through G fires, which represent fewer than 5% of incidents in the dataset. This is an expected consequence of class imbalance, not a model failure — and it points directly to where future data collection and model refinement should focus.
 
-![Feature Importance](../Pipeline/feature_importance.png)
+[Feature Importance](/Pipeline/feature_importance.png)
 
 The feature importance chart reveals what the model is actually learning. Discovery day of year is the strongest single predictor — fire season is real, and the data reflects it. Geographic coordinates rank second, capturing regional fire ecology that state-level variables alone cannot. Land ownership type rounds out the top tier, distinguishing federal wilderness from private land in ways that correlate strongly with fire behavior and suppression access.
 
@@ -54,14 +54,12 @@ The forest has been keeping records for thirty years. This model is finally read
 
 ## Same Resources. Different Outcomes.
 
-![Dispatch Comparison Map](../Pipeline/dispatch_comparison.png)
+[Dispatch Comparison Map](/Pipeline/dispatch_comparison.png)
 
 Without the model, two available crews are routed to the first two fires reported — a Class A
 (0.1 acres) and a Class B (5 acres). A 1,200-acre Class E fire and a 380-acre Class D fire sit
 unaddressed. With the model, the same two crews go directly to the fires the data says will
 grow. The small fires can wait. The large ones cannot.
-
-![Dispatch comparison map showing fires ranked by model vs arrival order](dispatch_comparison.png)
 
 ---
 *Model trained on USDA FPA-FOD Release 6 (1992–2020). Pipeline source code available in the linked repository.*
