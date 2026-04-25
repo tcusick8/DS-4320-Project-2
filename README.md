@@ -10,8 +10,8 @@
 | Name | Thomas Cusick |
 | NetID | tpg6hu |
 | DOI | [https://doi.org/10.5281/zenodo.19667633](https://doi.org/10.5281/zenodo.19667633) |
-| Press Release | [XXXXXXX](Press_Release.md) |
-| Pipeline | [XXX](XXX) |
+| Press Release | [The Forest Service Has 30 Years of Wildfire Data. This Model Finally Puts It to Work.](Press_Release.md) |
+| Pipeline | [Wildfire Prediction Pipeline](https://github.com/tcusick8/DS-4320-Project-2/blob/main/Pipeline/File%201:%20Fire_Pipeline.ipynb) |
 | License | [MIT](License.md) |
 
 ---
@@ -34,7 +34,7 @@ Wildfires have become one of the most costly and deadly natural disasters in the
 
 The general problem of predicting wildfire risk is broad enough to encompass everything from satellite image classification to atmospheric modeling. This project narrows the scope to a tabular, incident-level prediction task, specifically size class and cause, because these two outcomes are directly actionable for land managers: knowing a fire is likely to grow large changes suppression priority, and knowing its probable cause (lightning vs. debris burning vs. arson) changes prevention strategy. The 1992–2020 USFS Fire Occurrence Database was chosen because it is the most comprehensive, publicly available, and well-documented wildfire record in existence, with consistent schema across nearly three decades. The document model is a natural fit because each fire incident bundles heterogeneous attributes like spatial coordinates, discovery timing, jurisdictional metadata, cause codes, and containment outcomes, which vary in completeness across records, exactly the kind of semi-structured, entity-centric data MongoDB handles better than rigid relational tables.
 
-[XXXXXX](Press_Release.md)
+[The Forest Service Has 30 Years of Wildfire Data. This Model Finally Puts It to Work.](Press_Release.md)
 
 ---
 
@@ -159,7 +159,7 @@ Every document in the `ds4320.hw10` collection conforms to the following structu
 | Table | Description | Link |
 |---|---|---|
 | `Fires` (FPA_FOD_20221014.gpkg) | Primary incident-level wildfire records, 2.3M rows, sourced from the USDA Forest Service Research Data Archive (6th Edition, 2022). Contains geographic, temporal, cause, and size attributes for each fire. | [https://www.fs.usda.gov/rds/archive/catalog/RDS-2013-0009.6](https://www.fs.usda.gov/rds/archive/catalog/RDS-2013-0009.6) |
-| `_variable_descriptions.csv` | Metadata table describing every field in the Fires layer and the supplementary NWCG unit table. One row per variable. | [Link to metadata](_variable_descriptions.csv) |
+| `variable_descriptions.csv` | Metadata table describing every field in the Fires layer and the supplementary NWCG unit table. One row per variable. | [Link to metadata](_variable_descriptions.csv) |
 
 **Data Dictionary:**
 | Field (MongoDB path) | Data Type | Description | Example |
@@ -180,7 +180,7 @@ Every document in the `ds4320.hw10` collection conforms to the following structu
 | `location.county` | String | FIPS numeric county code for the county in which the fire burned | `"63"` |
 | `location.owner` | String | Name of the primary land owner or managing entity | `"USFS"` |
 
-**Data Dict Quantificaiton:**
+**Data Dict Quantification:**
 | Field | Range in Dataset | Source of Uncertainty | Quantification |
 |---|---|---|---|
 | `size.acres` | 0.0 – 662,702 | Fire perimeter estimates are manually mapped; smaller fires have lower mapping precision. Fires under 1 acre may have size recorded as nominal (e.g., exactly 0.1). | High uncertainty for Class A fires (<0.25 ac); low-to-moderate for Class D+ where perimeter mapping is more rigorous. Treat sub-1-acre values as approximate. |
