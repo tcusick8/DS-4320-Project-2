@@ -1,0 +1,51 @@
+2026-04-24 20:52:13,211 [INFO] Logging initialized.
+2026-04-24 20:52:30,895 [INFO] Logging initialized.
+2026-04-24 20:52:33,073 [INFO] Some libraries installed.
+2026-04-24 20:52:35,459 [INFO] NumExpr defaulting to 8 threads.
+2026-04-24 20:52:40,821 [INFO] Libraries loaded and configuration set.
+2026-04-24 20:52:40,906 [INFO] Loading Fires layer from /Users/thomascusick/Desktop/project_2/FPA_FOD_20221014.gpkg...
+2026-04-24 20:52:41,292 [ERROR] Failed to load data: /Users/thomascusick/Desktop/project_2/FPA_FOD_20221014.gpkg: No such file or directory
+2026-04-24 20:54:19,459 [INFO] Logging initialized.
+2026-04-24 20:54:21,566 [INFO] Some libraries installed.
+2026-04-24 20:54:21,580 [INFO] Libraries loaded and configuration set.
+2026-04-24 20:54:21,601 [INFO] Loading Fires layer from /Users/thomascusick/Desktop/project_2/FPA_FOD_20221014.gpkg...
+2026-04-24 20:58:06,512 [INFO] Loaded 2,303,566 fire records with 38 columns.
+2026-04-24 20:58:06,924 [INFO] Slimming dataset to selected columns...
+2026-04-24 20:58:46,708 [INFO] Slim shape: (2303566, 15)
+2026-04-24 20:58:59,810 [INFO] Estimated in-memory size: 1143.3 MB
+2026-04-24 20:59:00,378 [INFO] Shaping DataFrame rows into MongoDB documents...
+2026-04-24 21:02:31,940 [INFO] Shaped 2,303,566 documents successfully.
+2026-04-24 21:02:32,092 [INFO] Sample document: {'fod_id': 1, 'fire_year': 2005, 'cause': {'classification': 'Human', 'general_cause': 'Power generation/transmission/distribution'}, 'discovery': {'date': '2/2/2005', 'day_of_year': 33}, 'containment': {'date': '2/2/2005', 'day_of_year': 33.0}, 'size': {'acres': 0.1, 'size_class': 'A'}, 'location': {'latitude': 40.03694444, 'longitude': -121.00583333, 'state': 'CA', 'county': '63', 'owner': 'USFS'}}
+2026-04-24 21:02:38,141 [INFO] Successfully connected to MongoDB Atlas.
+2026-04-24 21:02:38,147 [INFO] Database: ds4320 | Collection: hw10
+2026-04-24 21:02:38,194 [INFO] Dropping existing collection to ensure clean insert...
+2026-04-24 21:02:38,209 [INFO] Collection cleared and ready.
+2026-04-24 21:02:38,222 [INFO] Storage before insert: 77.3 MB / 512 MB
+2026-04-24 21:02:38,334 [INFO] Inserting 100,000 documents into Atlas...
+2026-04-24 21:02:52,203 [INFO] Insert complete. Records in collection: 100,000
+2026-04-24 21:02:52,223 [INFO] Storage after insert: 77.3 MB / 512 MB
+2026-04-24 21:02:52,299 [INFO] Running aggregation pipeline to pull data from Atlas...
+2026-04-24 21:02:58,876 [INFO] Records loaded: 100,000
+2026-04-24 21:02:58,885 [INFO] Columns: ['fod_id', 'fire_year', 'cause_class', 'general_cause', 'discovery_doy', 'discovery_date', 'cont_date', 'cont_doy', 'size_acres', 'size_class', 'latitude', 'longitude', 'state', 'county', 'owner']
+2026-04-24 21:02:58,906 [INFO] MongoDB connection closed.
+2026-04-24 21:02:59,058 [INFO] Starting feature preparation...
+2026-04-24 21:02:59,267 [INFO] Dropped columns: ['size_acres', 'county']
+2026-04-24 21:02:59,299 [INFO] Rows after dropping null targets: 100,000
+2026-04-24 21:02:59,312 [INFO] Feature matrix shape: (100000, 12)
+2026-04-24 21:02:59,331 [INFO] Target distribution:
+size_class
+A    60854
+B    28880
+C     6944
+D     1366
+E      868
+F      661
+G      427
+Name: count, dtype: int64
+2026-04-24 21:02:59,346 [INFO] Building preprocessing and model pipeline...
+2026-04-24 21:02:59,368 [INFO] Categorical columns: ['cause_class', 'general_cause', 'discovery_date', 'cont_date', 'state', 'owner']
+2026-04-24 21:02:59,369 [INFO] Numeric columns: ['fod_id', 'fire_year', 'discovery_doy', 'cont_doy', 'latitude', 'longitude']
+2026-04-24 21:02:59,383 [INFO] Pipeline built successfully.
+2026-04-24 21:02:59,398 [INFO] Splitting data into train/test sets...
+2026-04-24 21:02:59,558 [INFO] Train size: 80,000 | Test size: 20,000
+2026-04-24 21:02:59,558 [INFO] Fitting pipeline...
