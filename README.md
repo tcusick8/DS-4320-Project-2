@@ -20,7 +20,7 @@
 
 ## Problem Definition
 
-**General Problem:**
+### General Problem:
 
 Predicting wildfire risk
 
@@ -28,7 +28,7 @@ Predicting wildfire risk
 
 Predicting the size class and cause cateogry of US wildfire incidents using historical fire records (1992-2020) enriched with geographic and seasonal context to help land managers and fire agencies prioritize prevention resourced by identifying which conditions and locations produce the most destructive fires.
 
-**Motivation:**
+### Motivation:
 
 Wildfires have become one of the most costly and deadly natural disasters in the United States, burning millions of acres annually and displacing hundreds of thousands of people. Despite significant investment in firefighting resources, prevention and early intervention remain underfunded relative to suppression, largely because land managers lack reliable, data-driven tools to identify where and why the most destructive fires originate. The 2020 fire season alone burned over 10 million acres nationally, and climate projections suggest that fire seasons will continue to grow longer and more severe. A model that can predict fire size and likely cause from early incident characteristics gives agencies a meaningful head start in allocating prevention resources before fires grow out of control.
 
