@@ -161,7 +161,7 @@ Every document in the `ds4320.hw10` collection conforms to the following structu
 | Table | Description | Link |
 |---|---|---|
 | `Fires` (FPA_FOD_20221014.gpkg) | Primary incident-level wildfire records, 2.3M rows, sourced from the USDA Forest Service Research Data Archive (6th Edition, 2022). Contains geographic, temporal, cause, and size attributes for each fire. | [https://www.fs.usda.gov/rds/archive/catalog/RDS-2013-0009.6](https://www.fs.usda.gov/rds/archive/catalog/RDS-2013-0009.6) |
-| `variable_descriptions.csv` | Metadata table describing every field in the Fires layer and the supplementary NWCG unit table. One row per variable. | [Link to metadata](variable_descriptions.csv) |
+| `variable_descriptions.csv` | Metadata table describing every field in the Fires layer and the supplementary NWCG unit table. One row per variable. | [Link to metadata](/Metadata/variable_descriptions.csv) |
 
 **Data Dictionary:**
 | Field (MongoDB path) | Data Type | Description | Example |
