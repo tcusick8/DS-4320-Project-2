@@ -24,7 +24,7 @@
 
 Predicting wildfire risk
 
-**Specific refined statement:**
+### Specific refined statement:
 
 Predicting the size class and cause cateogry of US wildfire incidents using historical fire records (1992-2020) enriched with geographic and seasonal context to help land managers and fire agencies prioritize prevention resourced by identifying which conditions and locations produce the most destructive fires.
 
@@ -32,7 +32,7 @@ Predicting the size class and cause cateogry of US wildfire incidents using hist
 
 Wildfires have become one of the most costly and deadly natural disasters in the United States, burning millions of acres annually and displacing hundreds of thousands of people. Despite significant investment in firefighting resources, prevention and early intervention remain underfunded relative to suppression, largely because land managers lack reliable, data-driven tools to identify where and why the most destructive fires originate. The 2020 fire season alone burned over 10 million acres nationally, and climate projections suggest that fire seasons will continue to grow longer and more severe. A model that can predict fire size and likely cause from early incident characteristics gives agencies a meaningful head start in allocating prevention resources before fires grow out of control.
 
-**Rationale for refinement:**
+### Rationale for refinement:
 
 The general problem of predicting wildfire risk is broad enough to encompass everything from satellite image classification to atmospheric modeling. This project narrows the scope to a tabular, incident-level prediction task, specifically size class and cause, because these two outcomes are directly actionable for land managers: knowing a fire is likely to grow large changes suppression priority, and knowing its probable cause (lightning vs. debris burning vs. arson) changes prevention strategy. The 1992–2020 USFS Fire Occurrence Database was chosen because it is the most comprehensive, publicly available, and well-documented wildfire record in existence, with consistent schema across nearly three decades. The document model is a natural fit because each fire incident bundles heterogeneous attributes like spatial coordinates, discovery timing, jurisdictional metadata, cause codes, and containment outcomes, which vary in completeness across records, exactly the kind of semi-structured, entity-centric data MongoDB handles better than rigid relational tables.
 
@@ -42,7 +42,7 @@ The general problem of predicting wildfire risk is broad enough to encompass eve
 
 ## Domain Exposition
 
-**Terminology:**
+### Terminology:
 
 | Term | Definition |
 |---|---|
@@ -59,7 +59,7 @@ The general problem of predicting wildfire risk is broad enough to encompass eve
 | **NWCG** | National Wildfire Coordinating Group — the federal body that standardizes wildfire data and terminology |
 | **Fire Year** | The calendar year in which a fire was discovered — key temporal unit for trend analysis |
 
-**Project Domain:**
+### Project Domain:
 
 This project lives at the intersection of environmental data science, natural resource management, and public safety. Wildfire management in the US is coordinated across a complex web of federal, state, and local agencies, including the USDA Forest Service, Bureau of Land Management, and state fire departments, each maintaining their own incident records that feed into national databases like the one used here. The core analytical challenge is that wildfire behavior is driven by a highly nonlinear combination of fuel load, weather, terrain, and ignition source, making prediction difficult but not intractable when sufficient historical data is available. Analysts in this domain work closely with GIS tools, satellite remote sensing, and increasingly machine learning to move from reactive suppression toward proactive risk modeling. The document model is particularly well-suited here because wildfire records are naturally entity-centric — each incident is a self-contained event with its own attributes, and the data is semi-structured, with varying completeness across fields depending on jurisdiction and fire size.
 
@@ -78,19 +78,19 @@ This project lives at the intersection of environmental data science, natural re
 
 ## Data Creation
 
-**Raw Data Acquisition:**
+### Raw Data Acquisition:
 
 The dataset used in this project is the Spatial Wildfire Occurrence Data for the United States, 1992–2020 (FPA_FOD_20221014, 6th Edition), published by Karen C. Short through the USDA Forest Service Research Data Archive in 2022. It is publicly available at no cost and was accessed directly via the [Forest Service Research Data Archive](https://www.fs.usda.gov/rds/archive/catalog/RDS-2013-0009.6). The data was downloaded as a GeoPackage (.gpkg) file and loaded into a Google Colab environment using GeoPandas, targeting the Fires layer which contains the full incident-level records.
 
 The database contains 2.3 million geo-referenced wildfire records compiled from the reporting systems of federal, state, and local fire organizations across all 50 states. Records were required to include a discovery date, final fire size, and a point location precise to at least a one-square-mile PLSS section in order to be included. The data was standardized to conform to National Wildfire Coordinating Group (NWCG) conventions, including an updated cause classification standard approved in August 2020, and underwent basic error-checking and deduplication prior to publication. In total, the dataset spans 29 years and represents approximately 180 million acres burned.
 
-**Code:**
+### Code:
 
 | File | Description | Link |
 |---|---|---|
 | `File 1: Fire_Pipeline.ipynb` | Cells 4-9 downloads the raw FPA-FOD GeoPackage, loads the Fires layer, selects and slims columns, shapes each row into a nested MongoDB document, and inserts 2000 records into MongoDB Atlas | [Data Creation Code](https://github.com/tcusick8/DS-4320-Project-2/blob/main/Pipeline/File%201%3A%20Fire_Pipeline.ipynb) |
 
-**Rationale:**
+### Rationale:
 
 **Column selection:** The 15 columns retained were chosen to cover the four dimensions most relevant to the prediction task — ignition (cause classification, general cause), temporal context (fire year, discovery date, discovery day of year), outcome (fire size, size class, containment date, containment day of year), and spatial context (latitude, longitude, state, county, owner). Columns excluded include identifiers with no predictive value (FPA_ID, LOCAL_FIRE_REPORT_ID), join keys for external tables not used in this project (ICS_209_PLUS_INCIDENT_JOIN_ID, MTBS_ID), and fields with extremely high missingness that would introduce more noise than signal (DISCOVERY_TIME, CONT_TIME, FIRE_CODE). This is a judgment call: retaining more columns increases information but also increases sparsity and storage cost.
 
@@ -102,11 +102,11 @@ The database contains 2.3 million geo-referenced wildfire records compiled from 
 
 **County field:** The `COUNTY` field in the raw data stores FIPS numeric codes rather than county names. This is noted as a known limitation. FIPS codes are retained as-is because joining to a FIPS lookup table was judged out of scope for this deliverable, but this introduces interpretability risk for any model or visualization that treats county as a categorical label.
 
-**Bias Identification:**
+### Bias Identification:
 
 Several sources of bias are present in this dataset. Reporting bias is the most significant: smaller fires in rural or less-resourced jurisdictions are systematically underreported compared to fires on federal land, which has more robust incident tracking infrastructure. Temporal bias exists because reporting standards, cause classification codes, and data collection practices changed materially over the 29-year span, meaning fires from the early 1990s are not directly comparable to those from 2020. Geographic bias is introduced because the western United States, particularly California, Oregon, and Idaho, contributes disproportionately to the record count, both because those states have more fires and because their agencies have more mature reporting systems. Finally, cause classification bias exists because a significant portion of records carry unknown or unspecified causes, which could skew any model trained to predict cause category.
 
-**Bias Mitigation:**
+### Bias Mitigation:
 
 Reporting and geographic bias can be partially mitigated by including `STATE` and `OWNER_DESCR` as features in the model, allowing it to learn jurisdiction-specific patterns rather than treating all records as drawn from the same population. Temporal bias can be addressed by including `FIRE_YEAR` as a feature and, where appropriate, stratifying train/test splits by year rather than sampling randomly. For cause classification bias, records with null or unknown cause values can be excluded from the cause-prediction task specifically, or treated as a separate class, so that missingness does not propagate as a spurious signal. Uncertainty quantification in the data dictionary further documents where numerical features carry high measurement error so that downstream analysis can weight or discount those fields accordingly.
 
@@ -114,7 +114,7 @@ Reporting and geographic bias can be partially mitigated by including `STATE` an
 
 ## Metadata
 
-**Implicit Schema:**
+### Implicit Schema:
 Every document in the `ds4320.hw10` collection conforms to the following structure. All top-level fields are required. Within sub-objects, fields may be null where the source data did not record a value (most commonly `containment.date` and `containment.day_of_year` for fires with no recorded containment).
 
 ```json
@@ -152,12 +152,12 @@ Every document in the `ds4320.hw10` collection conforms to the following structu
 }
 ```
 
-**Conventions:**
+### Conventions:
 - String dates are sourced directly from the GeoPackage and are not guaranteed to follow a consistent format across all records.
 - `county` stores FIPS codes, not county names.
 - No additional top-level fields should be added without updating this schema document.
 
-**Data Summary:**
+### Data Summary:
 | Table | Description | Link |
 |---|---|---|
 | `Fires` (FPA_FOD_20221014.gpkg) | Primary incident-level wildfire records, 2.3M rows, sourced from the USDA Forest Service Research Data Archive (6th Edition, 2022). Contains geographic, temporal, cause, and size attributes for each fire. | [https://www.fs.usda.gov/rds/archive/catalog/RDS-2013-0009.6](https://www.fs.usda.gov/rds/archive/catalog/RDS-2013-0009.6) |
@@ -182,7 +182,7 @@ Every document in the `ds4320.hw10` collection conforms to the following structu
 | `location.county` | String | FIPS numeric county code for the county in which the fire burned | `"63"` |
 | `location.owner` | String | Name of the primary land owner or managing entity | `"USFS"` |
 
-**Data Dictionary Quantification:**
+### Data Dictionary Quantification:
 | Field | Range in Dataset | Source of Uncertainty | Quantification |
 |---|---|---|---|
 | `size.acres` | 0.0 – 662,702 | Fire perimeter estimates are manually mapped; smaller fires have lower mapping precision. Fires under 1 acre may have size recorded as nominal (e.g., exactly 0.1). | ±50% relative error for Class A (<0.25 ac); ±15–20% for Class B–C (0.25–99.9 ac); ±5–10% for Class D+ (≥100 ac). Treat sub-1-acre values as order-of-magnitude estimates only. |
